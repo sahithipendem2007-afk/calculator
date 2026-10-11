@@ -1,0 +1,1050 @@
+#index.html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Calculator — CodeAlpha Task 2</title>
+    <meta
+      name="description"
+      content="A modern, colorful glassmorphism calculator built with HTML, CSS, and vanilla JavaScript."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+  </head>
+  <body>
+    <!-- Decorative background shapes -->
+    <div class="bg-shapes" aria-hidden="true">
+      <span class="shape shape--1"></span>
+      <span class="shape shape--2"></span>
+      <span class="shape shape--3"></span>
+      <span class="shape shape--4"></span>
+    </div>
+
+    <main class="page">
+      <!-- Header -->
+      <header class="header">
+        <h1 class="header__title">SMART CALCULATOR</h1>
+        <p class="header__subtitle">Simple &bull; Fast &bull; Powerful</p>
+      </header>
+
+      <!-- Calculator card -->
+      <section class="calculator" aria-label="Smart Calculator">
+        <!-- Display -->
+        <div class="display" role="region" aria-label="Calculator display">
+          <div class="display__expression" id="expression" aria-live="polite">
+            &nbsp;
+          </div>
+          <div
+            class="display__result"
+            id="result"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            0
+          </div>
+          <div class="display__status">
+            <span class="status-dot" id="status-dot"></span>
+            <span class="status-text" id="status-text">Ready</span>
+          </div>
+        </div>
+
+        <!-- Button grid -->
+        <div class="keypad" role="group" aria-label="Calculator buttons">
+          <button class="key key--clear" data-action="clear" aria-label="All clear">
+            AC
+          </button>
+          <button class="key key--util" data-action="backspace" aria-label="Backspace">
+            <span aria-hidden="true">⌫</span>
+          </button>
+          <button class="key key--util" data-action="percent" aria-label="Percent">
+            %
+          </button>
+          <button class="key key--op" data-action="operator" data-op="/" aria-label="Divide">
+            &divide;
+          </button>
+
+          <button class="key key--num" data-action="number" data-num="7" aria-label="Seven">
+            7
+          </button>
+          <button class="key key--num" data-action="number" data-num="8" aria-label="Eight">
+            8
+          </button>
+          <button class="key key--num" data-action="number" data-num="9" aria-label="Nine">
+            9
+          </button>
+          <button class="key key--op" data-action="operator" data-op="*" aria-label="Multiply">
+            &times;
+          </button>
+
+          <button class="key key--num" data-action="number" data-num="4" aria-label="Four">
+            4
+          </button>
+          <button class="key key--num" data-action="number" data-num="5" aria-label="Five">
+            5
+          </button>
+          <button class="key key--num" data-action="number" data-num="6" aria-label="Six">
+            6
+          </button>
+          <button class="key key--op" data-action="operator" data-op="-" aria-label="Subtract">
+            &minus;
+          </button>
+
+          <button class="key key--num" data-action="number" data-num="1" aria-label="One">
+            1
+          </button>
+          <button class="key key--num" data-action="number" data-num="2" aria-label="Two">
+            2
+          </button>
+          <button class="key key--num" data-action="number" data-num="3" aria-label="Three">
+            3
+          </button>
+          <button class="key key--op" data-action="operator" data-op="+" aria-label="Add">
+            +
+          </button>
+
+          <button class="key key--num key--zero" data-action="number" data-num="0" aria-label="Zero">
+            0
+          </button>
+          <button class="key key--num" data-action="decimal" aria-label="Decimal point">
+            .
+          </button>
+          <button class="key key--equals" data-action="equals" aria-label="Equals">
+            =
+          </button>
+        </div>
+      </section>
+
+      <!-- Footer hint -->
+      <footer class="footer">
+        <p>Tip: use your keyboard &mdash; numbers, + &minus; * /, Enter, Backspace, Esc</p>
+      </footer>
+    </main>
+
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
+
+#style.css
+/* ============================================================
+   SMART CALCULATOR — CodeAlpha Task 2
+   style.css  ·  Premium glassmorphism calculator UI
+   ============================================================ */
+
+/* ---------- CSS Variables / Design Tokens ---------- */
+:root {
+  /* Background palette */
+  --bg-0: #0a0a1a;
+  --bg-1: #12122a;
+  --bg-2: #1a0b2e;
+
+  /* Glass surface */
+  --glass-bg: rgba(20, 18, 48, 0.55);
+  --glass-border: rgba(168, 140, 255, 0.18);
+  --glass-inner: rgba(255, 255, 255, 0.04);
+
+  /* Accent ramps */
+  --purple-1: #7c3aed;
+  --purple-2: #a855f7;
+  --violet: #8b5cf6;
+  --blue: #3b82f6;
+  --cyan: #06b6d4;
+  --pink-1: #ec4899;
+  --pink-2: #f43f5e;
+  --orange: #f59e0b;
+  --yellow: #fbbf24;
+
+  /* Button base */
+  --btn-bg: rgba(35, 32, 70, 0.65);
+  --btn-text: #e8e6ff;
+  --btn-radius: 16px;
+
+  /* Display */
+  --display-bg: rgba(8, 6, 24, 0.55);
+
+  /* Text */
+  --text: #e8e6ff;
+  --text-dim: #9d97c4;
+
+  /* Effects */
+  --glow-purple: 0 0 30px rgba(124, 58, 237, 0.35);
+  --glow-cyan: 0 0 30px rgba(6, 182, 212, 0.3);
+  --glow-pink: 0 0 30px rgba(236, 72, 153, 0.3);
+  --shadow-card: 0 24px 64px rgba(0, 0, 0, 0.45),
+    0 0 0 1px var(--glass-border), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: radial-gradient(ellipse at 20% 0%, var(--bg-2) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, #0d1b3a 0%, transparent 50%),
+    linear-gradient(160deg, var(--bg-0) 0%, var(--bg-1) 100%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* ---------- Decorative background shapes ---------- */
+.bg-shapes {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: drift 18s ease-in-out infinite;
+}
+
+.shape--1 {
+  width: 340px;
+  height: 340px;
+  background: var(--purple-1);
+  top: -80px;
+  left: -60px;
+  animation-delay: 0s;
+}
+
+.shape--2 {
+  width: 300px;
+  height: 300px;
+  background: var(--cyan);
+  bottom: -60px;
+  right: -40px;
+  animation-delay: -4s;
+}
+
+.shape--3 {
+  width: 260px;
+  height: 260px;
+  background: var(--pink-1);
+  top: 40%;
+  left: 70%;
+  opacity: 0.2;
+  animation-delay: -8s;
+}
+
+.shape--4 {
+  width: 200px;
+  height: 200px;
+  background: var(--blue);
+  top: 60%;
+  left: 10%;
+  opacity: 0.2;
+  animation-delay: -12s;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.08);
+  }
+  66% {
+    transform: translate(-20px, 25px) scale(0.95);
+  }
+}
+
+/* ---------- Page layout ---------- */
+.page {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fade-up 0.6s var(--ease) both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Header ---------- */
+.header {
+  text-align: center;
+  user-select: none;
+}
+
+.header__title {
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, var(--purple-2), var(--cyan), var(--pink-1));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 6s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.header__subtitle {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ---------- Calculator card (glassmorphism) ---------- */
+.calculator {
+  width: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+.calculator:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 72px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(168, 140, 255, 0.28),
+    0 0 50px rgba(124, 58, 237, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ---------- Display ---------- */
+.display {
+  background: var(--display-bg);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: 1.1rem 1.25rem 0.85rem;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+}
+
+.display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(168, 140, 255, 0.4),
+    transparent
+  );
+}
+
+.display__expression {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-dim);
+  text-align: right;
+  min-height: 1.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.02em;
+}
+
+.display__result {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(2rem, 8vw, 2.8rem);
+  font-weight: 700;
+  text-align: right;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+  margin-top: 0.25rem;
+  transition: color 0.2s var(--ease);
+}
+
+.display__result.is-error {
+  color: var(--pink-2);
+  font-size: clamp(1.1rem, 4vw, 1.4rem);
+  font-weight: 600;
+}
+
+.display__status {
+  margin-top: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.status-dot.is-error {
+  background: var(--pink-2);
+  box-shadow: 0 0 8px rgba(244, 63, 94, 0.6);
+}
+
+/* ---------- Keypad ---------- */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.7rem;
+}
+
+/* ---------- Base button ---------- */
+.key {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--btn-text);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--btn-radius);
+  background: var(--btn-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  padding: 0.85rem 0;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.12s var(--ease), box-shadow 0.2s var(--ease),
+    background 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.key:hover {
+  transform: translateY(-2px);
+  border-color: rgba(168, 140, 255, 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.key:active {
+  transform: scale(0.94);
+}
+
+.key:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+/* Ripple effect */
+.key .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(0);
+  animation: ripple-anim 0.5s ease-out;
+  pointer-events: none;
+}
+
+@keyframes ripple-anim {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Keyboard-press visual feedback */
+.key.is-pressed {
+  transform: scale(0.94);
+  box-shadow: 0 0 20px rgba(168, 140, 255, 0.4);
+}
+
+/* ---------- Number buttons ---------- */
+.key--num {
+  background: rgba(30, 28, 60, 0.7);
+}
+
+.key--num:hover {
+  background: rgba(45, 42, 85, 0.8);
+}
+
+/* ---------- Operator buttons (purple/blue gradient) ---------- */
+.key--op {
+  background: linear-gradient(135deg, var(--purple-1), var(--blue));
+  color: #fff;
+  font-weight: 700;
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+.key--op:hover {
+  box-shadow: var(--glow-purple);
+}
+
+/* ---------- Utility buttons (percent, backspace — orange/yellow) ---------- */
+.key--util {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(251, 191, 36, 0.2));
+  color: var(--yellow);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.key--util:hover {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+}
+
+/* ---------- Clear button (pink/red) ---------- */
+.key--clear {
+  background: linear-gradient(135deg, var(--pink-1), var(--pink-2));
+  color: #fff;
+  font-weight: 700;
+  border-color: rgba(236, 72, 153, 0.3);
+}
+
+.key--clear:hover {
+  box-shadow: var(--glow-pink);
+}
+
+/* ---------- Equals button (bright gradient) ---------- */
+.key--equals {
+  background: linear-gradient(135deg, var(--cyan), var(--blue), var(--purple-2));
+  background-size: 200% 200%;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.5rem;
+  border-color: rgba(6, 182, 212, 0.3);
+  animation: gradient-shift 4s ease infinite;
+}
+
+.key--equals:hover {
+  box-shadow: var(--glow-cyan);
+}
+
+/* ---------- Zero button spans 2 columns ---------- */
+.key--zero {
+  grid-column: span 2;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  user-select: none;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+  .page {
+    padding: 1.25rem 0.9rem;
+    gap: 1rem;
+  }
+
+  .calculator {
+    padding: 1.1rem;
+    border-radius: 22px;
+    gap: 1rem;
+  }
+
+  .keypad {
+    gap: 0.5rem;
+  }
+
+  .key {
+    min-height: 54px;
+    font-size: 1.2rem;
+    border-radius: 14px;
+  }
+
+  .display {
+    min-height: 110px;
+    padding: 0.9rem 1rem 0.7rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding: 1rem 0.6rem;
+  }
+
+  .key {
+    min-height: 48px;
+    font-size: 1.1rem;
+    padding: 0.6rem 0;
+  }
+
+  .keypad {
+    gap: 0.4rem;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+  
+#script.js
+
+/* ============================================================
+   SMART CALCULATOR — CodeAlpha Task 2
+   script.js  ·  Calculator logic (vanilla JavaScript)
+   ============================================================ */
+
+/* ---------- DOM refs ---------- */
+const expressionEl = document.getElementById('expression');
+const resultEl = document.getElementById('result');
+const statusDot = document.getElementById('status-dot');
+const statusText = document.getElementById('status-text');
+const keypad = document.querySelector('.keypad');
+
+/* ---------- Calculator state ---------- */
+let current = '0'; // current input string (numbers + operators)
+let justEvaluated = false; // true right after "=" was pressed
+
+/* ---------- Operator symbol mapping ---------- */
+const OP_SYMBOLS = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+const OP_VALUES = { '−': '-', '×': '*', '÷': '/', '+': '+', '-': '-' };
+
+/* ============================================================
+   Core helpers
+   ============================================================ */
+
+/* Set the status indicator (Ready / Error) */
+function setStatus(isError) {
+  statusDot.classList.toggle('is-error', isError);
+  resultEl.classList.toggle('is-error', isError);
+  statusText.textContent = isError ? 'Error' : 'Ready';
+}
+
+/* Render current input to the display */
+function render() {
+  // Expression line shows the raw input with pretty operator symbols
+  const pretty = current
+    .replace(/\*/g, '×')
+    .replace(/\//g, '÷')
+    .replace(/(?<=\d)-/g, '−'); // only mid-expression minus gets the glyph
+  expressionEl.textContent = pretty || '\u00A0';
+
+  // Result line shows a live preview of the evaluated expression
+  const preview = safeEval(current);
+  if (preview === null) {
+    resultEl.textContent = current === '' ? '0' : current
+      .replace(/\*/g, '×')
+      .replace(/\//g, '÷')
+      .replace(/-/g, '−');
+  } else {
+    resultEl.textContent = formatNumber(preview);
+  }
+}
+
+/* Format a number for display (trim floating-point noise) */
+function formatNumber(n) {
+  if (!isFinite(n)) return 'Error';
+  if (Number.isInteger(n)) return String(n);
+  // Round to 10 significant digits to avoid 0.1+0.2 = 0.30000000000000004
+  return parseFloat(n.toPrecision(12)).toString();
+}
+
+/* ============================================================
+   Safe expression evaluator (no eval)
+   Parses and evaluates + - × ÷ with correct precedence.
+   ============================================================ */
+function safeEval(expr) {
+  if (!expr || expr === '' || expr === '-' || expr === '.') return null;
+
+  // Must end with a digit (or closing paren) to be a complete expression
+  if (/[+\-*/.]$/.test(expr)) return null;
+
+  // Tokenize: numbers (including decimals) and operators
+  const tokens = expr.match(/(\d+\.?\d*|\.\d+)|([+\-*/])/g);
+  if (!tokens) return null;
+
+  // Validate every token — reject anything unexpected
+  for (const t of tokens) {
+    if (!/^\d+\.?\d*$/.test(t) && !/^\.\d+$/.test(t) && !/^[+\-*/]$/.test(t))
+      return null;
+  }
+
+  // Convert to numbers and operators
+  const nums = [];
+  const ops = [];
+
+  for (const token of tokens) {
+    if (/^[+\-*/]$/.test(token)) {
+      // Prevent two consecutive operators (allow leading minus)
+      if (ops.length >= nums.length && nums.length > 0) return null;
+      ops.push(token);
+    } else {
+      nums.push(parseFloat(token));
+    }
+  }
+
+  if (nums.length === 0) return null;
+  if (nums.length !== ops.length + 1) return null;
+
+  // First pass: handle multiplication and division (higher precedence)
+  const nums2 = [nums[0]];
+  const ops2 = [];
+
+  for (let i = 0; i < ops.length; i++) {
+    const op = ops[i];
+    const next = nums[i + 1];
+
+    if (op === '*') {
+      nums2[nums2.length - 1] *= next;
+    } else if (op === '/') {
+      if (next === 0) return 'Error';
+      nums2[nums2.length - 1] /= next;
+    } else {
+      ops2.push(op);
+      nums2.push(next);
+    }
+  }
+
+  // Second pass: handle addition and subtraction
+  let result = nums2[0];
+  for (let i = 0; i < ops2.length; i++) {
+    if (ops2[i] === '+') result += nums2[i + 1];
+    else if (ops2[i] === '-') result -= nums2[i + 1];
+  }
+
+  return result;
+}
+
+/* ============================================================
+   Input handlers
+   ============================================================ */
+
+/* Append a digit (0-9) */
+function inputDigit(digit) {
+  if (justEvaluated) {
+    // Start fresh after "="
+    current = digit;
+    justEvaluated = false;
+    setStatus(false);
+    render();
+    return;
+  }
+
+  // Prevent leading zeros like "007"
+  const lastNumber = current.split(/[+\-*/]/).pop();
+  if (lastNumber === '0' && digit === '0') return;
+  if (lastNumber === '0' && digit !== '.') {
+    current = current.slice(0, -1) + digit;
+  } else {
+    current += digit;
+  }
+
+  setStatus(false);
+  render();
+}
+
+/* Append a decimal point (prevent multiple decimals in one number) */
+function inputDecimal() {
+  if (justEvaluated) {
+    current = '0.';
+    justEvaluated = false;
+    setStatus(false);
+    render();
+    return;
+  }
+
+  const lastNumber = current.split(/[+\-*/]/).pop();
+  if (lastNumber.includes('.')) return; // already has a decimal
+
+  if (lastNumber === '') {
+    current += '0.';
+  } else {
+    current += '.';
+  }
+
+  setStatus(false);
+  render();
+}
+
+/* Append an operator (+, -, *, /) — replaces repeated operators */
+function inputOperator(op) {
+  if (justEvaluated) {
+    // Continue calculating from the result
+    current = resultEl.textContent.replace(/,/g, '');
+    justEvaluated = false;
+  }
+
+  if (current === '' || current === '0') {
+    // Allow leading minus for negative numbers
+    if (op === '-') {
+      current = '-';
+      setStatus(false);
+      render();
+    }
+    return;
+  }
+
+  // If the last character is an operator (or lone minus), replace it
+  if (/[+\-*/]$/.test(current)) {
+    // Don't allow replacing a leading minus with another operator
+    if (current === '-' && op !== '-') {
+      current = '';
+      return;
+    }
+    current = current.slice(0, -1) + op;
+  } else {
+    current += op;
+  }
+
+  setStatus(false);
+  render();
+}
+
+/* Percent: converts the current number to a percentage */
+function inputPercent() {
+  if (justEvaluated) {
+    current = resultEl.textContent.replace(/,/g, '');
+    justEvaluated = false;
+  }
+
+  const lastNumber = current.split(/[+\-*/]/).pop();
+  if (lastNumber === '' || lastNumber === '.') return;
+
+  const pctValue = parseFloat(lastNumber) / 100;
+  const replacement = formatNumber(pctValue);
+
+  // Replace the last number segment with its percent value
+  current = current.slice(0, current.length - lastNumber.length) + replacement;
+
+  setStatus(false);
+  render();
+}
+
+/* Backspace: remove the last character */
+function backspace() {
+  if (justEvaluated) {
+    // After "=", backspace clears everything
+    clearAll();
+    return;
+  }
+
+  if (current.length <= 1 || (current.length === 2 && current[0] === '-')) {
+    current = '0';
+  } else {
+    current = current.slice(0, -1);
+  }
+
+  setStatus(false);
+  render();
+}
+
+/* Clear all (AC) */
+function clearAll() {
+  current = '0';
+  justEvaluated = false;
+  setStatus(false);
+  render();
+}
+
+/* Equals: evaluate the expression and show the result */
+function equals() {
+  const value = safeEval(current);
+
+  if (value === 'Error') {
+    resultEl.textContent = 'Cannot divide by zero';
+    expressionEl.textContent = current.replace(/\*/g, '×').replace(/\//g, '÷').replace(/-/g, '−');
+    setStatus(true);
+    justEvaluated = true;
+    return;
+  }
+
+  if (value === null) {
+    // Incomplete expression — do nothing
+    return;
+  }
+
+  const formatted = formatNumber(value);
+  expressionEl.textContent = current.replace(/\*/g, '×').replace(/\//g, '÷').replace(/(?<=\d)-/g, '−') + ' =';
+  resultEl.textContent = formatted;
+  current = formatted;
+  justEvaluated = true;
+  setStatus(false);
+}
+
+/* ============================================================
+   Button click handling (event delegation)
+   ============================================================ */
+function handleAction(action, dataset) {
+  switch (action) {
+    case 'number':
+      inputDigit(dataset.num);
+      break;
+    case 'decimal':
+      inputDecimal();
+      break;
+    case 'operator':
+      inputOperator(dataset.op);
+      break;
+    case 'percent':
+      inputPercent();
+      break;
+    case 'backspace':
+      backspace();
+      break;
+    case 'clear':
+      clearAll();
+      break;
+    case 'equals':
+      equals();
+      break;
+  }
+}
+
+keypad.addEventListener('click', (e) => {
+  const btn = e.target.closest('.key');
+  if (!btn) return;
+
+  createRipple(btn, e);
+  handleAction(btn.dataset.action, btn.dataset);
+});
+
+/* Ripple animation on click */
+function createRipple(btn, e) {
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+  ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+  btn.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 500);
+}
+
+/* ============================================================
+   Keyboard support
+   ============================================================ */
+const KEY_MAP = {
+  '0': { action: 'number', num: '0' },
+  '1': { action: 'number', num: '1' },
+  '2': { action: 'number', num: '2' },
+  '3': { action: 'number', num: '3' },
+  '4': { action: 'number', num: '4' },
+  '5': { action: 'number', num: '5' },
+  '6': { action: 'number', num: '6' },
+  '7': { action: 'number', num: '7' },
+  '8': { action: 'number', num: '8' },
+  '9': { action: 'number', num: '9' },
+  '.': { action: 'decimal' },
+  '+': { action: 'operator', op: '+' },
+  '-': { action: 'operator', op: '-' },
+  '*': { action: 'operator', op: '*' },
+  '/': { action: 'operator', op: '/' },
+  'Enter': { action: 'equals' },
+  '=': { action: 'equals' },
+  'Backspace': { action: 'backspace' },
+  'Escape': { action: 'clear' },
+  '%': { action: 'percent' },
+};
+
+/* Find the on-screen button that matches a keyboard key, for visual feedback */
+function findKey(action, dataset) {
+  const keys = keypad.querySelectorAll('.key');
+  for (const key of keys) {
+    if (key.dataset.action !== action) continue;
+    if (action === 'number' && key.dataset.num !== dataset.num) continue;
+    if (action === 'operator' && key.dataset.op !== dataset.op) continue;
+    return key;
+  }
+  return null;
+}
+
+/* Flash a button to show which keyboard key was pressed */
+function flashKey(btn) {
+  if (!btn) return;
+  btn.classList.add('is-pressed');
+  setTimeout(() => btn.classList.remove('is-pressed'), 120);
+}
+
+document.addEventListener('keydown', (e) => {
+  const mapping = KEY_MAP[e.key];
+  if (!mapping) return;
+
+  // Prevent browser navigation for "/" and "'"
+  e.preventDefault();
+
+  handleAction(mapping.action, mapping);
+  flashKey(findKey(mapping.action, mapping));
+});
+
+/* ============================================================
+   Initial render
+   ============================================================ */
+render();
+
